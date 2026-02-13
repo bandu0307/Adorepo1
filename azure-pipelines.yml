@@ -1,0 +1,35 @@
+trigger: none
+
+pool: ARJUN
+
+steps:
+- task: TerraformInstaller@1
+  inputs:
+    terraformVersion: 'latest'
+
+- task: TerraformTask@5
+  displayName: TASK- Terrafrom INIT
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/'
+    backendServiceArm: 'appreg-svc'
+    backendAzureRmStorageAccountName: 'munnastorage'
+    backendAzureRmContainerName: 'democontainer'
+    backendAzureRmKey: 'arjun1.tfstate'
+
+- task: TerraformTask@5
+  displayName: TASK- Terrafrom Plan
+  inputs:
+    provider: 'azurerm'
+    command: 'plan'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/'
+    environmentServiceNameAzureRM: 'appreg-svc'
+
+- task: TerraformTask@5
+  displayName: TASK- Terrafrom Apply
+  inputs:
+    provider: 'azurerm'
+    command: 'apply'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/'
+    environmentServiceNameAzureRM: 'appreg-svc'
